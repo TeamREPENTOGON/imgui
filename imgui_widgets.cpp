@@ -4826,6 +4826,17 @@ bool ImGui::InputTextEx(const char* label, const char* hint, char* buf, int buf_
     // We are only allowed to access the state if we are already the active widget.
     ImGuiInputTextState* state = GetInputTextState(id);
 
+    bool multiline_history_common_is_first_line = true, multiline_history_common_is_last_line = true;
+    if (((flags & ImGuiInputTextFlags_CallbackHistory) && (flags & ImGuiInputTextFlags_Multiline)) && (IsKeyPressed(ImGuiKey_UpArrow) || IsKeyPressed(ImGuiKey_DownArrow))) {
+        for (int i = 0; multiline_history_common_is_first_line && i < state->Stb->cursor && i < state->TextLen; i++) {
+            multiline_history_common_is_first_line &= state->TextA[i] != '\n';
+        }
+        for (int i = state->Stb->cursor; multiline_history_common_is_last_line && i < state->TextLen; i++) {
+            multiline_history_common_is_last_line &= state->TextA[i] != '\n';
+        }
+    }
+
+
     if (g.LastItemData.ItemFlags & ImGuiItemFlags_ReadOnly)
         flags |= ImGuiInputTextFlags_ReadOnly;
     const bool is_readonly = (flags & ImGuiInputTextFlags_ReadOnly) != 0;
@@ -5349,13 +5360,17 @@ bool ImGui::InputTextEx(const char* label, const char* hint, char* buf, int buf_
             }
             else if ((flags & ImGuiInputTextFlags_CallbackHistory) != 0 && IsKeyPressed(ImGuiKey_UpArrow))
             {
+                if (!is_multiline || multiline_history_common_is_first_line) {
                 event_flag = ImGuiInputTextFlags_CallbackHistory;
                 event_key = ImGuiKey_UpArrow;
+                }
             }
             else if ((flags & ImGuiInputTextFlags_CallbackHistory) != 0 && IsKeyPressed(ImGuiKey_DownArrow))
             {
+                if (!is_multiline || multiline_history_common_is_last_line) {
                 event_flag = ImGuiInputTextFlags_CallbackHistory;
                 event_key = ImGuiKey_DownArrow;
+                }
             }
             else if ((flags & ImGuiInputTextFlags_CallbackEdit) && state->EditedThisFrame)
             {
