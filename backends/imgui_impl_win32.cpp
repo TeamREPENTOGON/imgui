@@ -94,6 +94,7 @@
 //  2016-11-12: Inputs: Only call Win32 ::SetCursor(nullptr) when io.MouseDrawCursor is set.
 
 #include "imgui.h"
+#include "RepentogonImGuiHook.h"
 #ifndef IMGUI_DISABLE
 #include "imgui_impl_win32.h"
 #ifndef WIN32_LEAN_AND_MEAN
@@ -746,6 +747,12 @@ IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARA
 // This version is in theory thread-safe in the sense that no path should access ImGui::GetCurrentContext().
 IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandlerEx(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam, ImGuiIO& io)
 {
+    if (repentogonImGuiHookData.MultiViewport_WndProcHandler) {
+        auto ret = repentogonImGuiHookData.MultiViewport_WndProcHandler(hwnd, msg, wParam, lParam);
+        if (ret.has_value())
+            return ret.value();
+    }
+
     ImGui_ImplWin32_Data* bd = ImGui_ImplWin32_GetBackendData(io);
     if (bd == nullptr)
         return 0;
