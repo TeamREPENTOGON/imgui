@@ -19560,7 +19560,16 @@ static void ImGui::DockNodeUpdate(ImGuiDockNode* node)
         host_window->DrawList->ChannelsSetCurrent(DOCKING_HOST_DRAW_CHANNEL_FG);
     if (host_window && node->Windows.Size > 0)
     {
+        bool needPop = false;
+        if(node->VisibleWindow){
+            needPop = true;
+            PushFont(NULL, g.FontSizeBase * node->VisibleWindow->FontWindowScale);
+        }
+
         DockNodeUpdateTabBar(node, host_window);
+
+        if(needPop)
+            PopFont();
     }
     else
     {
