@@ -1264,6 +1264,7 @@ IMPLEMENTING SUPPORT for ImGuiBackendFlags_RendererHasTextures:
 #endif
 
 #include "imgui.h"
+#include "RepentogonImGuiHook.h"
 #ifndef IMGUI_DISABLE
 #include "imgui_internal.h"
 
@@ -17458,6 +17459,12 @@ static void ImGui::WindowSelectViewport(ImGuiWindow* window)
         SetWindowViewport(window, main_viewport);
         return;
     }
+
+    if (repentogonImGuiHookData.shouldDisableMultiViewport) {
+        SetWindowViewport(window, main_viewport);
+        return;
+    }
+
     window->ViewportOwned = false;
 
     // Appearing popups reset their viewport so they can inherit again
