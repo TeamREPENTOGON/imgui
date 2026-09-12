@@ -51,6 +51,7 @@ enum ImGuiFreeTypeLoaderFlags_
     ImGuiFreeTypeBuilderFlags_LoadColor     = ImGuiFreeTypeLoaderFlags_LoadColor,
     ImGuiFreeTypeBuilderFlags_Bitmap        = ImGuiFreeTypeLoaderFlags_Bitmap,
 #endif
+    ImGuiFreeTypeBuilderFlags_RGON_FONT_AWESOME = 1 << 30,
 };
 
 // Obsolete names (will be removed)

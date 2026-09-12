@@ -551,6 +551,9 @@ static bool ImGui_ImplFreeType_FontBakedLoadGlyph(ImFontAtlas* atlas, ImFontConf
         const float offsets_scale = (ref_size != 0.0f) ? (baked->Size / ref_size) : 1.0f;
         float font_off_x = ImFloor(src->GlyphOffset.x * offsets_scale + 0.5f); // Snap scaled offset.
         float font_off_y = ImFloor(src->GlyphOffset.y * offsets_scale + 0.5f) + baked->Ascent;
+        if (src->FontLoaderFlags & ImGuiFreeTypeBuilderFlags_RGON_FONT_AWESOME) {
+            font_off_y += baked->Size * 2 / 16;
+        }
         float recip_h = 1.0f / rasterizer_density;
         float recip_v = 1.0f / rasterizer_density;
 
