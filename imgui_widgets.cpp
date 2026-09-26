@@ -4827,12 +4827,14 @@ bool ImGui::InputTextEx(const char* label, const char* hint, char* buf, int buf_
     ImGuiInputTextState* state = GetInputTextState(id);
 
     bool multiline_history_common_is_first_line = true, multiline_history_common_is_last_line = true;
-    if (((flags & ImGuiInputTextFlags_CallbackHistory) && (flags & ImGuiInputTextFlags_Multiline)) && (IsKeyPressed(ImGuiKey_UpArrow) || IsKeyPressed(ImGuiKey_DownArrow))) {
-        for (int i = 0; multiline_history_common_is_first_line && i < state->Stb->cursor && i < state->TextLen; i++) {
-            multiline_history_common_is_first_line &= state->TextA[i] != '\n';
-        }
-        for (int i = state->Stb->cursor; multiline_history_common_is_last_line && i < state->TextLen; i++) {
-            multiline_history_common_is_last_line &= state->TextA[i] != '\n';
+    if (state && state->Stb && g.ActiveId == id) {
+        if (((flags & ImGuiInputTextFlags_CallbackHistory) && (flags & ImGuiInputTextFlags_Multiline)) && (IsKeyPressed(ImGuiKey_UpArrow) || IsKeyPressed(ImGuiKey_DownArrow))) {
+            for (int i = 0; multiline_history_common_is_first_line && i < state->Stb->cursor && i < state->TextLen; i++) {
+                multiline_history_common_is_first_line &= state->TextA[i] != '\n';
+            }
+            for (int i = state->Stb->cursor; multiline_history_common_is_last_line && i < state->TextLen; i++) {
+                multiline_history_common_is_last_line &= state->TextA[i] != '\n';
+            }
         }
     }
 
